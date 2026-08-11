@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -35,11 +37,38 @@ def sobre():
             'descricao': 'Um dos meus favoritos por unir ação frenética, exploração urbana e uma ótima sensação de ser o Homem-Aranha.'
         }
     ]
-    return render_template('sobre.html', jogos=jogos)
+
+    filmes = [
+        {
+            'titulo': 'Cidade de Deus',
+            'imagem': 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=900&q=80',
+            'descricao': 'Um dos filmes mais intensos e marcantes, com história, tensão e impacto visual incríveis.'
+        },
+        {
+            'titulo': 'Velozes e Furiosos 9',
+            'imagem': 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80',
+            'descricao': 'Ação acelerada, adrenalina e uma dose de família, velocidade e emoção em cada cena.'
+        }
+    ]
+
+    series = [
+        {
+            'titulo': 'Impuros',
+            'imagem': 'https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=900&q=80',
+            'descricao': 'Uma série envolvente, com drama, tensão e personagens muito marcantes.'
+        },
+        {
+            'titulo': 'Tropa de Elite',
+            'imagem': 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80',
+            'descricao': 'Um clássico do gênero, intenso, realista e cheio de situações decisivas.'
+        }
+    ]
+
+    return render_template('sobre.html', jogos=jogos, filmes=filmes, series=series)
 
 @app.route("/boletim")
 def boletim():
     return render_template('boletim.html')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)

@@ -1,8 +1,17 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
+
+
+def pode_votar(idade):
+    return idade >= 18
+
+
+def pode_dirigir(idade):
+    return idade >= 18
+
 
 @app.route("/")
 def index():
@@ -66,9 +75,53 @@ def sobre():
 
     return render_template('sobre.html', jogos=jogos, filmes=filmes, series=series)
 
-@app.route("/boletim")
+@app.route("/boletim", methods=['GET', 'POST'])
 def boletim():
-    return render_template('boletim.html')
+    nome = ''
+    sobrenome = ''
+    idade = 0
+    resultado = {
+        'nome_completo': '',
+        'pode_votar': False,
+        'pode_dirigir': False,
+    }
+
+    if request.method == 'POST':
+        nome = request.form.get('nome', '').strip()
+        sobrenome = request.form.get('sobrenome', '').strip()
+        idade = request.form.get('idade', 0, type=int)
+
+        if nome or sobrenome:
+            resultado['nome_completo'] = f'{nome} {sobrenome}'.strip()
+            resultado['pode_votar'] = pode_votar(idade)
+            resultado['pode_dirigir'] = pode_dirigir(idade)
+
+    return render_template('boletim.html', nome=nome, sobrenome=sobrenome, idade=idade, resultado=resultado)
+
+
+@app.route("/informacoes", methods=['GET', 'POST'])
+def informacoes():
+    nome = ''
+    sobrenome = ''
+    idade = 0
+    resultado = {
+        'nome_completo': '',
+        'pode_votar': False,
+        'pode_dirigir': False,
+    }
+
+    if request.method == 'POST':
+        nome = request.form.get('nome', '').strip()
+        sobrenome = request.form.get('sobrenome', '').strip()
+        idade = request.form.get('idade', 0, type=int)
+
+        if nome or sobrenome:
+            resultado['nome_completo'] = f'{nome} {sobrenome}'.strip()
+            resultado['pode_votar'] = pode_votar(idade)
+            resultado['pode_dirigir'] = pode_dirigir(idade)
+
+    return render_template('informacoes.html', nome=nome, sobrenome=sobrenome, idade=idade, resultado=resultado)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)

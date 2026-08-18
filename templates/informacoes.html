@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <section class="informacoes-page">
+        <div class="informacoes-layout">
+            <div class="info-card">
+                <h1>Informações</h1>
+                <p>Informe seu nome, sobrenome e idade para verificar se você pode votar e dirigir.</p>
+                <ul>
+                    <li><strong>Menor de 18 anos:</strong> não pode votar e nem dirigir.</li>
+                    <li><strong>18 anos ou mais:</strong> já pode votar e dirigir.</li>
+                </ul>
+            </div>
+
+            <div class="validation-card">
+                <h2>Validação</h2>
+                <form method="post">
+                    <div class="campo">
+                        <label for="nome">Nome</label>
+                        <input id="nome" name="nome" type="text" value="{{ nome }}" placeholder="Digite seu nome">
+                    </div>
+
+                    <div class="campo">
+                        <label for="sobrenome">Sobrenome</label>
+                        <input id="sobrenome" name="sobrenome" type="text" value="{{ sobrenome }}" placeholder="Digite seu sobrenome">
+                    </div>
+
+                    <div class="campo">
+                        <label for="idade">Idade</label>
+                        <input id="idade" name="idade" type="number" min="0" max="120" value="{{ idade if idade else '' }}" placeholder="Digite sua idade">
+                    </div>
+
+                    <button type="submit">Verificar</button>
+                </form>
+
+                <div class="resultado {% if not resultado.nome_completo %}vazio{% endif %}">
+                    {% if resultado.nome_completo %}
+                        <h3>Resultado para {{ resultado.nome_completo }}</h3>
+                        <div class="status-grid">
+                            <div class="status-box {% if resultado.pode_votar %}status-true{% else %}status-false{% endif %}">
+                                <label>Pode votar</label>
+                                <span>{{ 'Sim' if resultado.pode_votar else 'Não' }}</span>
+                            </div>
+                            <div class="status-box {% if resultado.pode_dirigir %}status-true{% else %}status-false{% endif %}">
+                                <label>Pode dirigir</label>
+                                <span>{{ 'Sim' if resultado.pode_dirigir else 'Não' }}</span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p>Preencha os dados e clique em verificar.</p>
+                        <div class="status-grid">
+                            <div class="status-box">
+                                <label>Pode votar</label>
+                                <span>--</span>
+                            </div>
+                            <div class="status-box">
+                                <label>Pode dirigir</label>
+                                <span>--</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
